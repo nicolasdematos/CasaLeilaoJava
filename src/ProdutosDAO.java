@@ -14,7 +14,6 @@ import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-
 public class ProdutosDAO {
     
     Connection conn;
@@ -22,21 +21,33 @@ public class ProdutosDAO {
     ResultSet resultset;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
-    public void cadastrarProduto (ProdutosDTO produto){
+    public void cadastrarProduto(ProdutosDTO produto){
+        conn = new conectaDAO().connectDB();
         
+        String sql = "INSERT INTO produtos (nome, valor, status) VALUES (?, ?, ?)";
         
-        //conn = new conectaDAO().connectDB();
-        
-        
+        try {
+            prep = conn.prepareStatement(sql);
+            prep.setString(1, produto.getNome());
+            prep.setInt(2, produto.getValor());
+            prep.setString(3, produto.getStatus());
+            
+            prep.executeUpdate();
+            
+            JOptionPane.showMessageDialog(null, "Produto cadastrado");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao cadastrar produto " + e.getMessage());
+        } finally {
+            try {
+                if (prep != null) prep.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro ao fechar conexão " + e.getMessage());
+            }
+        }
     }
     
     public ArrayList<ProdutosDTO> listarProdutos(){
-        
         return listagem;
     }
-    
-    
-    
-        
 }
-
