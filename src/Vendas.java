@@ -1,3 +1,7 @@
+
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -14,6 +18,7 @@ public class Vendas extends javax.swing.JFrame {
      */
     public Vendas() {
         initComponents();
+        listarProdutos();
     }
 
     /**
@@ -72,6 +77,31 @@ public class Vendas extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    
+    private void listarProdutos() {
+        try {
+            ProdutosDAO produtosdao = new ProdutosDAO();
+            
+            ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutosVendidos();
+            StringBuilder produtosTexto = new StringBuilder();
+            
+            for (ProdutosDTO produto : listagem) {
+                produtosTexto.append("ID: ").append(produto.getId()).append(" ");
+                produtosTexto.append("Nome: ").append(produto.getNome()).append(" ");
+                produtosTexto.append("Valor: ").append(produto.getValor()).append(" ");
+                produtosTexto.append("Status: ").append(produto.getStatus()).append("\n\n");
+            }
+            
+            if (listagem.isEmpty()) {
+                produtosTexto.append("Nenhum produto encontrado.");
+            }
+            
+            jTextArea1.setText(produtosTexto.toString());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar produtos " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
     /**
      * @param args the command line arguments
      */
